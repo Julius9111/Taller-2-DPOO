@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.NavigableSet;
 import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.Iterator;			
 
 /**
  * Esta clase tiene un conjunto de métodos para practicar operaciones sobre conjuntos implementados usando un árbol (TreeSet).
@@ -16,6 +18,7 @@ import java.util.TreeSet;
  * 
  * No pueden agregarse nuevos atributos.
  */
+
 public class SandboxConjuntos
 {
     /**
@@ -23,11 +26,13 @@ public class SandboxConjuntos
      * 
      * Por defecto, los elementos del conjunto están ordenados lexicográficamente.
      */
+	
     private NavigableSet<String> arbolCadenas;
 
     /**
      * Crea una nueva instancia de la clase con las dos listas inicializadas pero vacías
      */
+    
     public SandboxConjuntos( )
     {
         arbolCadenas = new TreeSet<String>( );
@@ -37,18 +42,23 @@ public class SandboxConjuntos
      * Retorna una lista con las cadenas del conjunto ordenadas lexicográficamente
      * @return Una lista con las cadenas ordenadas
      */
+    
     public List<String> getCadenasComoLista( )
     {
-        return null;
+    	List<String> list = new ArrayList<String>(arbolCadenas);
+    	return list;
     }
 
     /**
      * Retorna una lista con las cadenas del conjunto, ordenadas lexicográficamente de mayor a menor.
      * @return Una lista con las cadenas ordenadas de mayor a menor
      */
+    
     public List<String> getCadenasComoListaInvertida( )
     {
-        return null;
+        NavigableSet<String> rever = arbolCadenas.descendingSet();
+        List<String> list = new ArrayList<String>(rever);
+        return list;        
     }
 
     /**
@@ -57,9 +67,11 @@ public class SandboxConjuntos
      * Si el conjunto está vacío, debe retornar null.
      * @return La primera cadena del conjunto, o null si está vacío.
      */
+    
     public String getPrimera( )
     {
-        return null;
+        String prim = arbolCadenas.pollFirst();
+        return prim;
     }
 
     /**
@@ -68,9 +80,11 @@ public class SandboxConjuntos
      * Si el conjunto está vacío, debe retornar null.
      * @return La última cadena del conjunto, o null si está vacío.
      */
+    
     public String getUltima( )
     {
-        return null;
+        String ult = arbolCadenas.pollLast();
+        return ult;
     }
 
     /**
@@ -78,18 +92,21 @@ public class SandboxConjuntos
      * @param cadena
      * @return Una colección de cadenas mayores a la cadena dada. Si la cadena hace parte del conjunto, debe hacer parte de la colección retornada.
      */
+    
     public Collection<String> getSiguientes( String cadena )
     {
-        return null;
+        Collection<String> sigu = arbolCadenas.tailSet(cadena);
+        return sigu;
     }
 
     /**
      * Retorna la cantidad de valores en el conjunto de cadenas
      * @return
      */
+    
     public int getCantidadCadenas( )
     {
-        return -1;
+        return arbolCadenas.size();
     }
 
     /**
@@ -101,16 +118,17 @@ public class SandboxConjuntos
      */
     public void agregarCadena( String cadena )
     {
-
+    	arbolCadenas.add(cadena);
     }
-
+    
     /**
      * Elimina una cadena del conjunto de cadenas
      * @param cadena La cadena que se va eliminar
      */
+    
     public void eliminarCadena( String cadena )
     {
-
+    	arbolCadenas.remove(cadena);
     }
 
     /**
@@ -119,16 +137,23 @@ public class SandboxConjuntos
      */
     public void eliminarCadenaSinMayusculasOMinusculas( String cadena )
     {
-
+    	Iterator<String> iter = arbolCadenas.iterator();
+    	while (iter.hasNext()) {
+			String act = (String) iter.next();
+			if(act.equalsIgnoreCase(cadena)){
+				iter.remove();
+			}
+		}
     }
 
     /**
      * Elimina la primera cadena del conjunto
      */
+    
     public void eliminarPrimera( )
     {
-
-    }
+    	arbolCadenas.remove(getPrimera());
+    }	
 
     /**
      * Reinicia el conjunto de cadenas con las representaciones como Strings de los objetos contenidos en la lista del parámetro 'objetos'.
@@ -136,9 +161,16 @@ public class SandboxConjuntos
      * Use el método toString para convertir los objetos a cadenas.
      * @param valores Una lista de objetos
      */
+    
     public void reiniciarConjuntoCadenas( List<Object> objetos )
     {
-
+    	arbolCadenas.clear();
+    	Iterator<Object> iter = objetos.iterator();
+    	while (iter.hasNext()) {
+			Object obj = (Object) iter.next();
+			String CadenaObjeto = obj.toString();
+			agregarCadena(CadenaObjeto);
+		}
     }
 
     /**
@@ -146,16 +178,35 @@ public class SandboxConjuntos
      * 
      * Note que esta operación podría modificar el órden de los elementos dentro del conjunto.
      */
+    
     public void volverMayusculas( )
     {
+    	NavigableSet<String> SetNuevo;
+    	SetNuevo = new TreeSet<String>();
+    	Iterator<String> iter = arbolCadenas.iterator();
+    	while (iter.hasNext()) {
+			String act = (String) iter.next();
+			String up = act.toUpperCase();
+			SetNuevo.add(up);
+		}
+    	arbolCadenas.clear();
+    	arbolCadenas = SetNuevo;
     }
 
     /**
      * Construye un árbol de cadenas donde todas las cadenas están organizadas de MAYOR a MENOR.
      */
+    
     public TreeSet<String> invertirCadenas( )
     {
-        return null;
+    	TreeSet<String> SetNuevo;
+    	SetNuevo = new TreeSet<String>();
+    	Iterator<String> iter = arbolCadenas.iterator();
+    	while (iter.hasNext()) {
+			String act = (String) iter.next();
+			SetNuevo.add(act);
+    	}
+    	return SetNuevo;
     }
 
     /**
@@ -163,9 +214,17 @@ public class SandboxConjuntos
      * @param otroArreglo El arreglo de enteros con el que se debe comparar
      * @return True si todos los elementos del arreglo están dentro del conjunto
      */
+    
     public boolean compararElementos( String[] otroArreglo )
     {
-        return false;
+    	Boolean rta;
+    	NavigableSet<String> SetNuevo;
+    	SetNuevo = new TreeSet<String>();
+    	for (String elem : otroArreglo) {
+			SetNuevo.add(elem);
+		}
+    	rta = arbolCadenas.equals(SetNuevo);
+        return rta;
     }
-
+    
 }

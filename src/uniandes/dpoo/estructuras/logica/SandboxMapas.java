@@ -4,6 +4,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 /**
  * Esta clase tiene un conjunto de métodos para practicar operaciones sobre mapas.
@@ -41,7 +46,9 @@ public class SandboxMapas
      */
     public List<String> getValoresComoLista( )
     {
-        return null;
+    	List<String> val = new ArrayList<>(mapaCadenas.values());
+        val.sort(String::compareTo); 
+        return val;
     }
 
     /**
@@ -50,7 +57,9 @@ public class SandboxMapas
      */
     public List<String> getLlavesComoListaInvertida( )
     {
-        return null;
+    	List<String> LlavInvert = new ArrayList<>(mapaCadenas.keySet());
+        Collections.sort(LlavInvert, Collections.reverseOrder());
+        return LlavInvert;
     }
 
     /**
@@ -60,8 +69,21 @@ public class SandboxMapas
      * @return
      */
     public String getPrimera( )
-    {
-        return null;
+    {	
+    	if (mapaCadenas.isEmpty()) {
+            return null;
+        }
+
+        String prim = null; 
+
+        
+        for (String llav : mapaCadenas.keySet()) {
+            if (prim == null || llav.compareTo(prim) < 0) {
+                prim = llav; 
+            }
+        }
+
+        return prim;     
     }
 
     /**
@@ -72,7 +94,14 @@ public class SandboxMapas
      */
     public String getUltima( )
     {
-        return null;
+    	if (mapaCadenas.isEmpty()) {
+            return null;
+        }
+
+        // Obtener el máximo usando un Comparator para ordenar lexicográficamente
+        return mapaCadenas.values().stream()
+                .max(Comparator.naturalOrder())
+                .orElse(null);
     }
 
     /**
@@ -83,7 +112,9 @@ public class SandboxMapas
      */
     public Collection<String> getLlaves( )
     {
-        return null;
+    	return mapaCadenas.keySet().stream()
+                .map(String::toUpperCase)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -92,7 +123,14 @@ public class SandboxMapas
      */
     public int getCantidadCadenasDiferentes( )
     {
-        return -1;
+    	ArrayList<String> ValUnic = new ArrayList<>();
+        
+        for (String val : mapaCadenas.values()) {
+            if (!ValUnic.contains(val)) {
+                ValUnic.add(val);
+            }
+        }
+        return ValUnic.size();
     }
 
     /**
@@ -104,7 +142,8 @@ public class SandboxMapas
      */
     public void agregarCadena( String cadena )
     {
-
+    	String llav = new StringBuilder(cadena).reverse().toString();
+        mapaCadenas.put(llav, cadena);
     }
 
     /**
@@ -113,7 +152,7 @@ public class SandboxMapas
      */
     public void eliminarCadenaConLLave( String llave )
     {
-
+    	mapaCadenas.remove(llave);
     }
 
     /**
@@ -121,9 +160,16 @@ public class SandboxMapas
      * @param cadena El valor que se debe eliminar
      */
     public void eliminarCadenaConValor( String valor )
-    {
-
-    }
+    {	
+    	
+    	for (Map.Entry<String, String> entr : mapaCadenas.entrySet()) {
+            if (valor.equals(entr.getValue())) {
+                mapaCadenas.remove(entr.getKey());
+                return;
+            }
+        }
+    	
+    }	
 
     /**
      * Reinicia el mapa de cadenas con las representaciones como Strings de los objetos contenidos en la lista del parámetro 'objetos'.
@@ -133,15 +179,30 @@ public class SandboxMapas
      */
     public void reiniciarMapaCadenas( List<Object> objetos )
     {
-
+    	mapaCadenas.clear(); // Limpiar el mapa actual
+        
+        for (Object obj : objetos) {
+            String caden = obj.toString();
+            String llav = Integer.toHexString(System.identityHashCode(obj)); // Generar una llave única para cada objeto
+            mapaCadenas.put(llav, caden);
+        }
     }
-
+    
     /**
      * Modifica el mapa de cadenas reemplazando las llaves para que ahora todas estén en mayúsculas pero sigan conservando las mismas cadenas asociadas.
      */
     public void volverMayusculas( )
     {
-
+    	Map<String, String> MapaNuevo = new HashMap<>();
+        
+        for (Map.Entry<String, String> entr : mapaCadenas.entrySet()) {
+            String LlavMayusc = entr.getKey().toUpperCase();
+            String val = entr.getValue();
+            MapaNuevo.put(LlavMayusc, val);
+        }
+        
+        mapaCadenas.clear();
+        mapaCadenas.putAll(MapaNuevo);
     }
 
     /**
@@ -151,7 +212,7 @@ public class SandboxMapas
      */
     public boolean compararValores( String[] otroArreglo )
     {
-        return false;
+    	return Arrays.stream(otroArreglo).allMatch(mapaCadenas::containsValue);
     }
 
 }
